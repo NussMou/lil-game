@@ -36,13 +36,32 @@ class GameScene extends Phaser.Scene {
             blendMode: 'ADD'
         });
 
-        // const logo = this.physics.add.image(400, 100, 'logo');
-        // logo.setVelocity(100, 200);
-        // logo.setBounce(1, 1);
-        // logo.setCollideWorldBounds(true);
-
         particles.startFollow(this.circle);
+
+        this.stars = this.physics.add.group();
+
+        // 定时生成随机星星
+        this.time.addEvent({
+            delay: 1000, // 每秒生成一个星星
+            callback: this.spawnStar,
+            callbackScope: this,
+            loop: true
+        });
+
+        this.physics.add.overlap(this.circle, this.stars, this.collectStar, null, this);
         
+    }
+
+    spawnStar() {
+        const x = Phaser.Math.Between(0, 800);
+        const y = Phaser.Math.Between(0, 600);
+        const star = this.stars.create(x, y, 'star');
+        star.setBounce(Phaser.Math.FloatBetween(0.4, 0.8));
+        star.setCollideWorldBounds(true);
+    }
+
+    collectStar(circle, star) {
+        star.disableBody(true, true);
     }
 
     update() {
@@ -63,6 +82,15 @@ class GameScene extends Phaser.Scene {
         } else if (this.cursors.down.isDown) {
             this.circle.body.setVelocityY(speed);
         }
+        // 检测星星与黑球的距离，并让星星向黑球移动
+        this.stars.children.iterate((star) => {
+            const distance = Phaser.Math.Distance.Between(star.x, star.y, this.circle.x, this.circle.y);
+            if (distance < 80) { // 距离小于200时，星星向黑球移动
+                this.physics.moveToObject(star, this.circle, 100);
+            } else {
+                star.setVelocity(0);
+            }
+        });
     }
 }
 
