@@ -3,79 +3,66 @@ class GameScene extends Phaser.Scene {
         super({ key: 'GameScene' });
     }
 
+    preload() {
+        this.load.setBaseURL('https://labs.phaser.io');
+        this.load.image('red', 'assets/particles/red.png');
+        // this.load.image('logo', 'assets/sprites/phaser3-logo.png');
+    }
+
     create() {
-        // 動態生成黑球
-        this.blackBalls = this.physics.add.group();
+        this.cameras.main.setBackgroundColor('#000030');
 
-        for (let i = 0; i < 20; i++) {
-            this.createBlackBall(
-                Phaser.Math.Between(100, 700),
-                Phaser.Math.Between(100, 500),
-                0x000000,
-                0xff0000
-            );
-        }
+        // 创建一个可操作的黑色圆形
+        this.circle = this.add.circle(400, 300, 20, 0x000000);
+        this.physics.add.existing(this.circle);
+        this.circle.body.setCollideWorldBounds(true);
 
-        // 延遲呼叫，清除黑球，並生成主角黑球
-        this.time.delayedCall(2000, () => {
-            this.blackBalls.clear(true, true);
-            this.playerBall = this.createBlackBall(400, 300, 0x000000, 0xff0000);
-            this.addSmallDots();
-        }, [], this);
-    }
+        // 创建光标键输入
+        this.cursors = this.input.keyboard.createCursorKeys();
+        this.particles = this.add.particles('white');
+        
 
-    createBlackBall(x, y, fillColor, outlineColor) {
-        const ball = this.add.graphics({ x: x, y: y });
-        ball.fillStyle(fillColor, 1);
-        ball.fillCircle(0, 0, 20);
-        ball.lineStyle(2, outlineColor, 1);
-        ball.strokeCircle(0, 0, 20);
+        // this.tweens.add({
+        //     targets: this.circle,
+        //     angle: 360,
+        //     duration: 1000,
+        //     repeat: -1
+        // });
 
-        // 添加物理屬性
-        this.physics.add.existing(ball);
-        ball.body.setCircle(20);
-        ball.body.setCollideWorldBounds(true);
-        ball.body.setBounce(1);
+        // 创建粒子效果
+        const particles = this.add.particles(0, 0, 'red', {
+            speed: 100,
+            scale: { start: 1, end: 0 },
+            blendMode: 'ADD'
+        });
 
-        this.blackBalls.add(ball);
-        ball.body.setVelocity(Phaser.Math.Between(-200, 200), Phaser.Math.Between(-200, 200));
+        // const logo = this.physics.add.image(400, 100, 'logo');
+        // logo.setVelocity(100, 200);
+        // logo.setBounce(1, 1);
+        // logo.setCollideWorldBounds(true);
 
-        return ball;
-    }
-
-    addSmallDots() {
-        this.smallDots = this.physics.add.group();
-
-        for (let i = 0; i < 50; i++) {
-            const x = Phaser.Math.Between(50, 750);
-            const y = Phaser.Math.Between(50, 550);
-            const dot = this.createSmallDot(x, y);
-            this.smallDots.add(dot);
-        }
-
-        this.physics.add.overlap(this.playerBall, this.smallDots, this.collectDot, null, this);
-    }
-
-    createSmallDot(x, y) {
-        const dot = this.add.graphics({ x: x, y: y });
-        dot.fillStyle(0x00ff00, 1);
-        dot.fillCircle(0, 0, 5);
-
-        this.physics.add.existing(dot);
-        dot.body.setCircle(5);
-        dot.body.setCollideWorldBounds(true);
-        dot.body.setBounce(1);
-
-        return dot;
-    }
-
-    collectDot(player, dot) {
-        dot.destroy();
-        // 增加經驗值的邏輯
+        particles.startFollow(this.circle);
+        
     }
 
     update() {
-        // 更新遊戲邏輯
+        const speed = 200;
+
+        // 重置速度
+        this.circle.body.setVelocity(0);
+
+        // 根据按键设置速度
+        if (this.cursors.left.isDown) {
+            this.circle.body.setVelocityX(-speed);
+        } else if (this.cursors.right.isDown) {
+            this.circle.body.setVelocityX(speed);
+        }
+
+        if (this.cursors.up.isDown) {
+            this.circle.body.setVelocityY(-speed);
+        } else if (this.cursors.down.isDown) {
+            this.circle.body.setVelocityY(speed);
+        }
     }
 }
 

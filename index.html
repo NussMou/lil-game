@@ -2,57 +2,8 @@
 <html>
 <head>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser-arcade-physics.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
 </head>
 <body>
-
-    <script>
-    class Example extends Phaser.Scene
-    {
-        preload ()
-        {
-            this.load.setBaseURL('https://labs.phaser.io');
-            this.load.image('red', 'assets/particles/red.png');
-       }
-
-        create ()
-        {
-            this.cameras.main.setBackgroundColor('#000030');
-            this.circle = this.add.circle(400, 300, 20, 0x000000);
-            this.physics.add.existing(this.circle);
-            this.circle.body.setCollideWorldBounds(true);
-            this.cursors = this.input.keyboard.createCursorKeys();
-
-            const particles = this.add.particles(0, 0, 'red', {
-                speed: 100,
-                scale: { start: 1, end: 0 },
-                blendMode: 'ADD'
-            });
-
-            const logo = this.physics.add.image(400, 100, 'logo');
-
-            logo.setVelocity(100, 200);
-            logo.setBounce(1, 1);
-            logo.setCollideWorldBounds(true);
-
-            particles.startFollow(logo);
-        }
-    }
-
-    const config = {
-        type: Phaser.AUTO,
-        width: 800,
-        height: 600,
-        scene: Example,
-        physics: {
-            default: 'arcade',
-            arcade: {
-                gravity: { y: 200 }
-            }
-        }
-    };
-
-    const game = new Phaser.Game(config);
-    </script>
-
 </body>
 </html>

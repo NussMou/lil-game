@@ -1,17 +1,17 @@
-import PreloadScene from './preload.js';
-import GameScene from './GameScene.js';
-import EndScene from './EndScene.js';
+import GameScene from '../js/GameScene.js';
+
+console.log("main.js test")
 
 const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    backgroundColor: '#000000', 
-    scene: [PreloadScene, GameScene, EndScene],
+    backgroundColor: '#000000',
+    scene: [GameScene],
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false
+            gravity: { y: 0 }
         }
     }
 };
