@@ -11,8 +11,11 @@ class GameScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#000030');
         this.cnt = 0;
-        this.res = 0;
+        window.score = 0;
         this.myText = null;
+
+        this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        // this.spaceKey.enabled = false;
 
         // subject circle
         this.circle = this.add.circle(400, 300, 10, 0x000000);
@@ -107,10 +110,10 @@ class GameScene extends Phaser.Scene {
         star.setActive(false);    // unactive
         this.cnt++;
         let growthValue = 10 / Math.log(1 + this.cnt);
-        this.res += growthValue;
+        score += growthValue;
         if (this.mytext) {this.mytext.destroy();console.log("destroy");}
         
-        this.mytext = this.add.text(30, 30, this.res);
+        this.mytext = this.add.text(30, 30, score);
 
         if (star.particles) {
             star.particles.forEach(particle => particle.destroy()); // destroy particle
@@ -127,6 +130,16 @@ class GameScene extends Phaser.Scene {
 
     update() {
         const speed = 200;
+
+        if (score >= 60){
+            this.myText = this.add.text(400, 550, 'Press Space to go to next scene');
+            // this.myText.setVisible(true); 
+            this.spaceKey.enabled = true; 
+        }
+
+        if(this.spaceKey.isDown && this.spaceKey.enabled){
+            this.scene.start('ExchangeScene');
+        }
 
         // reset speed
         this.circle.body.setVelocity(0);
