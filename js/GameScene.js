@@ -10,6 +10,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor('#000030');
+        this.cnt = 0;
 
         // subject circle
         this.circle = this.add.circle(400, 300, 10, 0x000000);
@@ -19,13 +20,25 @@ class GameScene extends Phaser.Scene {
         // keyboard
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // particle
-        const particles = this.add.particles(0, 0, 'red', {
+        // // particle
+        // const particles = this.add.particles(0, 0, 'red', {
+        //     speed: 100,
+        //     scale: { start: 0.5, end: 0 },
+        //     blendMode: 'ADD'
+        // });
+        // particles.scale.start = 0;
+        window.particles = this.add.particles('red').createEmitter({
             speed: 100,
-            scale: { start: 1, end: 0 },
+            scale: { start: 0.5, end: 0 }, // Ensure scale is an object
             blendMode: 'ADD'
         });
 
+        // particles.setScale({
+        //     start: 0.8, // Increased from 0.5 to 0.8
+        //     end: 0.1    // Keep the end size or increase as needed
+        // });
+
+        particles.start(2000);
         particles.startFollow(this.circle);
 
         this.stars = this.physics.add.group();
@@ -91,9 +104,18 @@ class GameScene extends Phaser.Scene {
         star.body.enable = false; // unable
         star.setVisible(false);   // unvisible
         star.setActive(false);    // unactive
+
         if (star.particles) {
             star.particles.forEach(particle => particle.destroy()); // destroy particle
         }
+
+        this.circle.setScale(this.circle.scale + 0.1);
+        particles.setScale({
+            start: 0.5 + this.cnt*0.02, // Increased from 0.5 to 0.8
+            end: 0.1    // Keep the end size or increase as needed
+        });
+        this.cnt++;
+        console.log(this.cnt);
     }
 
     update() {
@@ -114,7 +136,6 @@ class GameScene extends Phaser.Scene {
             if(distance < 80){
                 if (star.tween){
                     star.tween.stop();
-                    star.tween = null; 
                 }
                 this.physics.moveToObject(star, this.circle, 100);
             }
