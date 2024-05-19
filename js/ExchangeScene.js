@@ -14,6 +14,7 @@ class ExchangeScene extends Phaser.Scene {
         this.cameras.main.setBackgroundColor('#000030');
         this.cnt = 0;
         this.myText = null;
+
         window.gen_cnt = 0;
         window.overlap_enable = true;
 
@@ -225,22 +226,21 @@ class ExchangeScene extends Phaser.Scene {
         console.log(gen_cnt);
     }
 
-    shot_star(){
-    
-        // create centen circle
-        const star = this.add.circle(this.circle.x, this.circle.y, 1, 0xffffff);
-        this.physics.add.existing(star);
-        
-        star.body.setBounce(Phaser.Math.FloatBetween(0.4, 0.8));
-        // star.body.setCollideWorldBounds(true);
-        this.stars.add(star);
-    
-        // add particle to star
-        const starParticle = this.add.image(this.circle.x, this.circle.y, 'red').setAlpha(0.5).setScale(0.2);
-        star.particles = [starParticle];
 
-        const speed = 300;  // 可根據需要調整速度
-        star.body.setVelocity(speed, 0); 
+    shot_star() {
+        const particles = this.add.particles('red');
+        const emitter = particles.createEmitter({
+            x: this.circle.x,
+            y: this.circle.y,
+            speed: 800, 
+            scale: { start: 0.5, end: 0 },
+            blendMode: 'ADD',
+            angle: 0, 
+            lifespan: 1000,
+            frequency: -1,
+        });
+    
+        emitter.emitParticle();
     }
 
     generate_star_for_switch_particle(){
