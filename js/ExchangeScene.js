@@ -127,8 +127,9 @@ class ExchangeScene extends Phaser.Scene {
         }
 
         this.circle.setScale(this.circle.scale + 0.1);
+        let particle_size = 0.5 + this.cnt*0.02 > 1 ? 1 : 0.5 + this.cnt*0.02;
         particles.setScale({
-            start: 0.5 + this.cnt*0.02, // Increased from 0.5 to 0.8
+            start: particle_size, // Increased from 0.5 to 0.8
             end: 0.1    // Keep the end size or increase as needed
         });
         
@@ -162,10 +163,16 @@ class ExchangeScene extends Phaser.Scene {
                 overlap_enable = false;
                 console.log("overlap");
                 console.log(overlap_enable);
-                this.time.delayedCall(1000, () => {
+                this.time.delayedCall(500, () => {
                     this.circle.body.setEnable(true);  // 重新启用物理碰撞体
                     overlap_enable = true;
+                    if (this.circle.y >= 250 && this.circle.y <= 350){
+                        for(let i = 0; i < 20; i++){
+                            this.spawnStar();
+                        }
+                    }
                 });
+                
             }
         }
 
