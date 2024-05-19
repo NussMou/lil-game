@@ -4,12 +4,11 @@ class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
-        // this.load.image('blackBall', 'assets/blackBall.png');
-        // this.load.image('smallDot', 'assets/smallDot.png');
+
     }
 
     create() {
-        this.scene.start('GameScene');
+        this.scene.start('StartScene');
     }
 }
 

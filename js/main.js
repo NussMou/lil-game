@@ -1,3 +1,4 @@
+import StartScene from '../js/StartScene.js';
 import GameScene from '../js/GameScene.js';
 
 console.log("main.js test")
@@ -7,7 +8,7 @@ const config = {
     width: 800,
     height: 600,
     backgroundColor: '#000000',
-    scene: [GameScene],
+    scene: [StartScene, GameScene],
     physics: {
         default: 'arcade',
         arcade: {
