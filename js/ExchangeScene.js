@@ -29,13 +29,7 @@ class ExchangeScene extends Phaser.Scene {
         // keyboard
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        // // particle
-        // const particles = this.add.particles(0, 0, 'red', {
-        //     speed: 100,
-        //     scale: { start: 0.5, end: 0 },
-        //     blendMode: 'ADD'
-        // });
-        console.log("exchangescene");
+        console.log("Exchange Scene");
         window.particles = this.add.particles('red').createEmitter({
             speed: 100,
             scale: { start: 0.5, end: 0 }, // Ensure scale is an object
