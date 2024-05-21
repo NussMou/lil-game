@@ -12,13 +12,15 @@ class ExchangeScene extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor('#000030');
-        this.cnt = 0;
+        // get_star_num = this.registry.get(get_star_num);
+        console.log(get_star_num);
         this.myText = null;
 
         window.gen_cnt = 0;
         window.overlap_enable = true;
 
         this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.nKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         // this.spaceKey.enabled = false;
 
         // subject circle
@@ -36,6 +38,7 @@ class ExchangeScene extends Phaser.Scene {
             blendMode: 'ADD'
         });
 
+        
         window.switch_particle = this.add.particles('red').createEmitter({
             x:700,
             y:300,
@@ -109,10 +112,10 @@ class ExchangeScene extends Phaser.Scene {
         star.body.enable = false; // unable
         star.setVisible(false);   // unvisible
         star.setActive(false);    // unactive
-        this.cnt++;
-        let growthValue = 10 / Math.log(1 + this.cnt);
+        get_star_num++;
+        let growthValue = 10 / Math.log(1 + get_star_num);
         score += growthValue;
-        if (this.mytext) {this.mytext.destroy();console.log("destroy");}
+        if (this.mytext) {this.mytext.destroy();}
         
         this.mytext = this.add.text(30, 30, score);
 
@@ -121,18 +124,18 @@ class ExchangeScene extends Phaser.Scene {
         }
 
         // this.circle.setScale(this.circle.scale + 0.05);
-        let particle_size = 0.5 + this.cnt*0.02 > 1 ? 1 : 0.5 + this.cnt*0.02;
+        let particle_size = 0.5 + get_star_num*0.02 > 1 ? 1 : 0.5 + get_star_num*0.02;
         particles.setScale({
             start: particle_size, // Increased from 0.5 to 0.8
             end: 0.1    // Keep the end size or increase as needed
         });
         
-        console.log(this.cnt);
+        // console.log(this.cnt);
     }
 
     updateScoreText(){
         // Update displayed score
-        if (this.mytext) {this.mytext.destroy();console.log("destroy");}
+        if (this.mytext) {this.mytext.destroy();}
         this.mytext = this.add.text(30, 30, score);
     }
 
@@ -143,16 +146,19 @@ class ExchangeScene extends Phaser.Scene {
 
     update(time,delta) {
         const speed = 200;
-        console.log("overlap_enable");
-        console.log(overlap_enable);
+        // console.log("overlap_enable");
+        // console.log(overlap_enable);
         this.updateScoreText();
-        this.toNextScene();
+        // this.toNextScene();
+        if (this.nKey.isDown) {
+            this.toNextScene();
+        }
         if (score >= 200){
             this.myText = this.add.text(400, 550, 'Press Space to go to next scene');
             // this.myText.setVisible(true); 
             this.spaceKey.enabled = true; 
             this.createVerticalLine();
-            console.log(this.circle.x);
+            // console.log(this.circle.x);
             if(this.circle.x >= 700 )
                 this.toNextScene();
         }
@@ -165,8 +171,8 @@ class ExchangeScene extends Phaser.Scene {
                 score -= 20;
                 this.shot_star();
                 overlap_enable = false;
-                console.log("overlap");
-                console.log(overlap_enable);
+                // console.log("overlap");
+                // console.log(overlap_enable);
                 this.time.delayedCall(500, () => {
                     this.circle.body.setEnable(true);  // 重新启用物理碰撞体
                     overlap_enable = true;
@@ -253,8 +259,8 @@ class ExchangeScene extends Phaser.Scene {
                 this.generate_star_for_switch_particle();
             }
         
-        console.log("gen_cnt");
-        console.log(gen_cnt);
+        // console.log("gen_cnt");
+        // console.log(gen_cnt);
     }
 
 

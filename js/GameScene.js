@@ -10,7 +10,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor('#000030');
-        this.cnt = 0;
+        window.get_star_num = 0;
         window.score = 0;
         this.myText = null;
 
@@ -108,11 +108,13 @@ class GameScene extends Phaser.Scene {
         star.body.enable = false; // unable
         star.setVisible(false);   // unvisible
         star.setActive(false);    // unactive
-        this.cnt++;
-        let growthValue = 10 / Math.log(1 + this.cnt);
+        get_star_num++;
+        let growthValue = 10 / Math.log(1 + get_star_num);
         score += growthValue;
         if (this.mytext) {this.mytext.destroy();console.log("destroy");}
         this.registry.set('score', score);
+        this.registry.set('get_star_num', get_star_num);
+
         
         this.mytext = this.add.text(30, 30, score);
 
@@ -122,11 +124,11 @@ class GameScene extends Phaser.Scene {
 
         this.circle.setScale(this.circle.scale + 0.1);
         particles.setScale({
-            start: 0.5 + this.cnt*0.02, // Increased from 0.5 to 0.8
+            start: 0.5 + get_star_num*0.02, // Increased from 0.5 to 0.8
             end: 0.1    // Keep the end size or increase as needed
         });
         
-        console.log(this.cnt);
+        console.log(get_star_num);
     }
 
     update() {
