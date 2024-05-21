@@ -160,10 +160,6 @@ class YellowScene extends Phaser.Scene {
         this.updateScoreText();
         // shot the star
         if(this.spaceKey.isDown){
-            console.log("spacekey press");
-            console.log(score);
-            console.log(time);
-            console.log(this.timer);
             if(score > 20 && time - this.timer > 1000){
                 this.circle.body.setEnable(false); 
                 score -= 20;
@@ -176,11 +172,12 @@ class YellowScene extends Phaser.Scene {
                 this.time.delayedCall(500, () => {
                     this.circle.body.setEnable(true);  // 重新启用物理碰撞体
                     overlap_enable = true;
-                    if (this.circle.y >= 250 && this.circle.y <= 350){
-                        for(let i = 0; i < 20; i++){
-                            this.spawnStar();
-                        }
-                    }
+                    // if (this.circle.y >= 250 && this.circle.y <= 350){
+                    //     for(let i = 0; i < 20; i++){
+                    //         this.spawnStar();
+                    //     }
+                    // }
+                    // if()
                 });
                 
             }
@@ -265,6 +262,24 @@ class YellowScene extends Phaser.Scene {
 
 
     shot_star() {
+        let star = this.physics.add.image(400, 100, 'logo');
+        star.setVelocity(800, 0);
+        this.stars.add(star);
+
+        star.setCollideWorldBounds(true);
+        star.on('worldbounds', () => {
+            console.log("star.destroy")
+            star.destroy(); 
+        });
+
+        this.physics.add.collider(star, this.switch_circle, (star, switch_circle) => {
+            console.log("shoot success");
+            star.destroy();
+            for(let i = 0; i < 20; i++)
+            this.spawnStar();
+        });
+
+
         const particles = this.add.particles('red');
         const emitter = particles.createEmitter({
             x: this.circle.x,
