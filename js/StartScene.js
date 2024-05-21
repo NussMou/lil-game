@@ -36,9 +36,15 @@ class StartScene extends Phaser.Scene
         });
 
         // this.add.text(10, 10, 'Click to explode emit particles');
-        this.time.delayedCall(1000, () => {
+        this.time.delayedCall(5000, () => {
             this.scene.start('GameScene'); // 切换场景
         }, [], this);
+    }
+    update(){
+        let spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        if(spaceKey.isDown){
+            this.scene.start('GameScene');
+        }
     }
 }
 export default StartScene;

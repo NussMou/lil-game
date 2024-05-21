@@ -112,6 +112,7 @@ class GameScene extends Phaser.Scene {
         let growthValue = 10 / Math.log(1 + this.cnt);
         score += growthValue;
         if (this.mytext) {this.mytext.destroy();console.log("destroy");}
+        this.registry.set('score', score);
         
         this.mytext = this.add.text(30, 30, score);
 

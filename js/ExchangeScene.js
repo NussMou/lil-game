@@ -120,7 +120,7 @@ class ExchangeScene extends Phaser.Scene {
             star.particles.forEach(particle => particle.destroy()); // destroy particle
         }
 
-        this.circle.setScale(this.circle.scale + 0.1);
+        // this.circle.setScale(this.circle.scale + 0.05);
         let particle_size = 0.5 + this.cnt*0.02 > 1 ? 1 : 0.5 + this.cnt*0.02;
         particles.setScale({
             start: particle_size, // Increased from 0.5 to 0.8
@@ -136,23 +136,33 @@ class ExchangeScene extends Phaser.Scene {
         this.mytext = this.add.text(30, 30, score);
     }
 
+    toNextScene(){
+        this.scene.start('YellowScene');
+    }
+
+
     update(time,delta) {
         const speed = 200;
         console.log("overlap_enable");
         console.log(overlap_enable);
-
+        this.updateScoreText();
+        this.toNextScene();
         if (score >= 200){
             this.myText = this.add.text(400, 550, 'Press Space to go to next scene');
             // this.myText.setVisible(true); 
             this.spaceKey.enabled = true; 
+            this.createVerticalLine();
+            console.log(this.circle.x);
+            if(this.circle.x >= 700 )
+                this.toNextScene();
         }
+
 
         // shot the star
         if(this.spaceKey.isDown){
             if(score > 20 && time - this.timer > 1000){
                 this.circle.body.setEnable(false); 
                 score -= 20;
-                this.updateScoreText();
                 this.shot_star();
                 overlap_enable = false;
                 console.log("overlap");
@@ -214,6 +224,26 @@ class ExchangeScene extends Phaser.Scene {
                     particle.y = star.y;
                 });
             }
+        });
+    }
+
+    createVerticalLine() {
+        const width = this.sys.game.config.width; // 獲取遊戲畫面的寬度
+        const height = this.sys.game.config.height; // 獲取遊戲畫面的高度
+
+        // 創建粒子系統
+        const particles = this.add.particles('yellowParticle');
+
+        // 創建發射器
+        const emitter = particles.createEmitter({
+            x: width - 10, // 在畫面最右邊
+            y: { min: 0, max: height }, // 從上到下
+            lifespan: 2000, // 粒子存在時間
+            speedY: { min: -100, max: 100 }, // 垂直速度範圍
+            scale: { start: 0.5, end: 0 }, // 粒子從顯示到消失的大小變化
+            blendMode: 'ADD', // 混合模式
+            frequency: 50, // 發射頻率
+            quantity: 1 // 每次發射的數量
         });
     }
 
